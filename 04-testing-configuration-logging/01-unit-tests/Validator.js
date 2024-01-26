@@ -1,5 +1,32 @@
 module.exports = class Validator {
   constructor(rules) {
+    for (const field of Object.keys(rules)) {
+        const rulesForField = rules[field];
+
+        if (!rulesForField.type) {
+            throw new Error(`No type for field ${field}`);
+        }
+
+        switch (rulesForField.type) {
+            case 'string':
+              if (!rulesForField.min) {
+                  throw new Error(`No min for field ${field}`);
+              }
+              if (!rulesForField.max) {
+                  throw new Error(`No max for field ${field}`);
+              }
+              break;
+            case 'number':
+              if (!rulesForField.min) {
+                  throw new Error(`No min for field ${field}`);
+              }
+              if (!rulesForField.max) {
+                  throw new Error(`No max for field ${field}`);
+              }
+              break;
+        }
+    }
+
     this.rules = rules;
   }
 
@@ -31,7 +58,7 @@ module.exports = class Validator {
             errors.push({field, error: `too little, expect ${rules.min}, got ${value}`});
           }
           if (value > rules.max) {
-            errors.push({field, error: `too big, expect ${rules.min}, got ${value}`});
+            errors.push({field, error: `too big, expect ${rules.max}, got ${value}`});
           }
           break;
       }
